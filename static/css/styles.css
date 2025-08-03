@@ -1,0 +1,39 @@
+body {
+  font-family: 'Times New Roman', Times, serif;
+  background: url('../images/login-bg.JPG') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.blur-card {
+  background: rgba(255, 255, 255, 0.503);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 30px;
+  z-index: auto;
+}
+.navbar {
+  font-size: xx-large;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.navbar .nav-link {
+  color: #fff !important;
+  margin-left: 12px;
+  font-weight: 500;
+  font-size: large;
+}
+
+.navbar .nav-link:hover {
+  color: #ffc107 !important;
+}
+
+footer {
+  color: #f8f9fa;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14px;
+}

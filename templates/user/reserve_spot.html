@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Reserve Spot{% endblock %}
+{% block content %}
+<h3>Reserve a Spot in {{ lot.name }}</h3>
+
+<form method="POST" action="{{ url_for('reserve_spot', lot_id=lot.id) }}">
+    <div class="mb-3">
+        <label for="vehicle_number" class="form-label">Vehicle Number:</label>
+        <input type="text" class="form-control" name="vehicle_number" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Reserve</button>
+</form>
+
+<a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+{% endblock %}

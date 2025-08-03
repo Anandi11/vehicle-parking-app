@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Create Parking Lot{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Create New Parking Lot</h2>
+
+<form method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">Lot Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" id="address" name="address" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="pincode" class="form-label">Pincode</label>
+        <input type="text" class="form-control" id="pincode" name="pincode" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="price" class="form-label">Price per Spot (₹)</label>
+        <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="spots" class="form-label">Total Number of Spots</label>
+        <input type="number" class="form-control" id="spots" name="spots" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Lot</button>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

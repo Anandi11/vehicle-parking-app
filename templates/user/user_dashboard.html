@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}User Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4"><b>Welcome, {{ session['username'] }}!</b></h2>
+
+<h4>Available Parking Lots</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th>Price (per hour)</th>
+            <th>Address</th>
+            <th>Pincode</th>
+            <th>Available Spots</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lot in parking_lots %}
+        <tr>
+            <td>{{ lot.name }}</td>
+            <td>₹{{ lot.price_per_hour }}</td>
+            <td>{{ lot.address }}</td>
+            <td>{{ lot.pincode }}</td>
+            <td>{{ lot.available_spots_count }} / {{ lot.max_spots }}</td>
+            <td><a href="{{ url_for('reserve_spot',  lot_id=lot.id) }}" class="btn btn-sm btn-success">Reserve Spot</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if reservations %}
+<h4 class="mt-5">Your Recent Reservations</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Parking Lot</th>
+            <th>Spot ID</th>
+            <th>Time</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for res in reservations %}
+        <tr>
+            <td>{{ res.parking_spot.parking_lot.name }}</td>
+            <td>{{ res.spot_id }}</td>
+            <td>{{ res.parking_time.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td>
+                {% if not res.leaving_time %}
+                <form action="{{ url_for('release_spot', reservation_id=res.id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger">Release</button>
+                </form>
+                {% else %}
+                Released at {{ res.leaving_time.strftime("%Y-%m-%d %H:%M") }} <br>
+                ₹{{ res.total_cost }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4 class="mt-5">Reservation Summary</h4>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <canvas id="lotBarChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="lotPieChart"></canvas>
+    </div>
+</div>
+<div class="alert alert-info">
+    <strong>Total Reservations:</strong> {{ total_reservations }}<br>
+    <strong>Total Cost:</strong> ₹{{ total_cost }}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ lot_summary.keys() | list | tojson | safe }};
+    const dataValues = {{ lot_summary.values() | list | tojson | safe }};
+
+    new Chart(document.getElementById('lotBarChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Reservations per Lot',
+                data: dataValues,
+                backgroundColor: 'rgba(54, 162, 235, 1)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Reservations by Lot (Bar Chart)'
+                }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('lotPieChart'), {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataValues,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                    '#9966FF', '#FF9F40'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Reservations by Lot (Pie Chart)'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
+{% else %}
+<p class="mt-4">You haven't made any reservations yet.</p>
+{% endif %}
+
+{% endblock %}

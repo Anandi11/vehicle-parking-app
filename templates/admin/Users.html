@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Registered Users{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Registered Users</h2>
+
+{% if users %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Spots booked</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                {% if user.reservations %}
+                    {% for res in user.reservations %}
+                       ({{res.lot.name}}) {{ res.spot_id }} {% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    None
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No users found.</p>
+{% endif %}
+{% endblock %}
